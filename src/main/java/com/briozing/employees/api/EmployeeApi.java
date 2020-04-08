@@ -71,4 +71,28 @@ public class EmployeeApi {
         }
         return new ResponseEntity<>(message,status);
     }
+
+    @GetMapping(value = "/id/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmployeeResponseVO> getEmployeeById(@PathVariable long id){
+        EmployeeResponseVO employeeResponseVO=null;
+        HttpStatus status=HttpStatus.OK;
+        try{
+            employeeResponseVO=employeeService.getEmployeeByIdService(id);
+        }catch(Exception e){
+            status=HttpStatus.NOT_FOUND;
+        }
+        return new ResponseEntity<>(employeeResponseVO,status);
+    }
+
+    @GetMapping(value = "/name/{name}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmployeeResponseVO> getEmployeeById(@PathVariable String name){
+        EmployeeResponseVO employeeResponseVO=null;
+        HttpStatus status=HttpStatus.OK;
+        try{
+            employeeResponseVO=employeeService.getEmployeeByNameService(name);
+        }catch(Exception e){
+            status=HttpStatus.NOT_FOUND;
+        }
+        return new ResponseEntity<>(employeeResponseVO,status);
+    }
 }

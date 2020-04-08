@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeService {
@@ -54,5 +55,29 @@ public class EmployeeService {
         String query="DELETE from employees WHERE id='"+id+"'";
         long deletedId= jdbcTemplate.update(query);
         return deletedId;
+    }
+
+    public EmployeeResponseVO getEmployeeByIdService(Long id){
+        String query="SELECT * FROM employees WHERE id='"+id+"'";
+        System.out.println(query);
+        Map<String, Object> map = jdbcTemplate.queryForMap(query);
+        EmployeeResponseVO employeeResponseVO=new EmployeeResponseVO();
+        employeeResponseVO.setId(Long.parseLong(String.valueOf(map.get("id"))));
+        employeeResponseVO.setName(String.valueOf(map.get("name")));
+        employeeResponseVO.setEmail(String.valueOf(map.get("email")));
+        System.out.println(employeeResponseVO);
+        return employeeResponseVO;
+    }
+
+    public EmployeeResponseVO getEmployeeByNameService(String name){
+        String query="SELECT * FROM employees WHERE name='"+name+"'";
+        System.out.println(query);
+        Map<String, Object> map=jdbcTemplate.queryForMap(query);
+        EmployeeResponseVO employeeResponseVO=new EmployeeResponseVO();
+        employeeResponseVO.setId(Long.parseLong(String.valueOf(map.get("id"))));
+        employeeResponseVO.setName(String.valueOf(map.get("name")));
+        employeeResponseVO.setEmail(String.valueOf(map.get("email")));
+        System.out.println(employeeResponseVO);
+        return employeeResponseVO;
     }
 }
