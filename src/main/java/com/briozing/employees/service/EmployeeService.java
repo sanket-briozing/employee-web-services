@@ -4,9 +4,11 @@ import com.briozing.employees.models.EmployeeRequestVO;
 import com.briozing.employees.models.EmployeeResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,17 +16,38 @@ import java.util.Map;
 public class EmployeeService {
 
     private final JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
+    private DataSource dataSource;
 
     @Autowired
     public EmployeeService(DataSource dataSource){
         jdbcTemplate=new JdbcTemplate(dataSource);
+        this.dataSource=dataSource;
+    }
+
+    public EmployeeResponseVO addEmployee1Service(EmployeeRequestVO employeeRequestVO){
+        String query="insert into employees (name,email) values ('"+employeeRequestVO.getName()+"','"+employeeRequestVO.getEmail()+"');";
+        int id=jdbcTemplate.update(query);
+        EmployeeResponseVO employeeResponseVO = new EmployeeResponseVO();
+        employeeResponseVO.setName(employeeRequestVO.getName());
+        employeeResponseVO.setEmail(employeeRequestVO.getEmail());
+        System.out.println(employeeRequestVO);
+        return employeeResponseVO;
     }
 
     public EmployeeResponseVO addEmployeeService(EmployeeRequestVO employeeRequestVO){
-        String query="insert into employees (name,email) values ('"+employeeRequestVO.getName()+"','"+employeeRequestVO.getEmail()+"');";
-        int newId = jdbcTemplate.update(query);
+        simpleJdbcInsert=new SimpleJdbcInsert(dataSource)
+                .withTableName("employees")
+                .usingGeneratedKeyColumns("id");
+
+        Map<String,String> requestMap= new HashMap<>();
+        requestMap.put("name",employeeRequestVO.getName());
+        requestMap.put("email",employeeRequestVO.getEmail());
+
+        Number id=simpleJdbcInsert.executeAndReturnKey(requestMap);
+        System.out.println("New record id is :- "+id);
         EmployeeResponseVO employeeResponseVO = new EmployeeResponseVO();
-        employeeResponseVO.setId(newId);
+        employeeResponseVO.setId(id.longValue());
         employeeResponseVO.setName(employeeRequestVO.getName());
         employeeResponseVO.setEmail(employeeRequestVO.getEmail());
         System.out.println(employeeRequestVO);
