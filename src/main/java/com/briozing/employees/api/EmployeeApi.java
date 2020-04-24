@@ -28,6 +28,7 @@ public class EmployeeApi {
 
     @GetMapping(value="/getAll",produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EmployeeResponseVO>> getAllEmployees(){
+        System.out.println("Hello World");
         List<EmployeeResponseVO> employeeResponseVOList=null;
         HttpStatus status= HttpStatus.OK;
         try{
@@ -94,5 +95,12 @@ public class EmployeeApi {
             status=HttpStatus.NOT_FOUND;
         }
         return new ResponseEntity<>(employeeResponseVO,status);
+    }
+
+
+    @GetMapping
+    public String getHello(){
+
+        return "Hello";
     }
 }
