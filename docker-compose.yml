@@ -1,0 +1,91 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD : sanket@123
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    network_mode: "host"
+  docker-employee:
+    image: docker-employee
+    ports:
+      - 8888:8888
+    network_mode: "host"
+    depends_on:
+      - mysql
+
+
+
+
+
+
+#version: "3"
+#services:
+#  docker-employee:
+#    image: docker-employee
+#    restart: on-failure
+#    ports:
+#      - "3131:8888"
+#
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/briozing
+#    username: root
+#    password: Sanket@123
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#
+
+
+
+#    networks:
+#      - employee-mysql
+#    depends_on:
+#      - mysqldb
+#    environment:
+#      - DATABASE_HOST=mysqldb
+#      - DATABASE_USER=root
+#      - DATABASE_PASSWORD=root
+#      - DATABASE_NAME=briozing
+#      - DATABASE_PORT=3310
+#
+#
+#  mysqldb:
+#    image: mysql:latest
+#    ports:
+#      - "3310:3306"
+#    networks:
+#      - employee-mysql
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=root
+#      - MYSQL_DATABASE=briozing
+#      - MYSQL_USER=root
+#      - MYSQL_PASSWORD=root
+#
+#networks:
+#  employee-mysql:
+
+
+
+
+#spring-con:
+#  image: docker-employee
+#  volumes:
+#    - /var/run/mysqld/mysqld.sock:/tmp/mysql.sock
+#  ports :
+#    - 3333:8888
+#
+
+#  external_links:
+#    - mysql-server
+#
+#mysql-server:
+#  image : mysql:latest
+#  ports:
+#    - 3308:3306
+#  environment:
+#    - MYSQL_ROOT_PASSWORD="password"
+#    - MYSQL_DATABASE="briozing"
+#    - MYSQL_ROOT_HOST="0.0.0.0"

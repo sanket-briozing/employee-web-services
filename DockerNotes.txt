@@ -1,0 +1,189 @@
+------how to install docker on ubuntu?------
+
+go to docs.docker.com
+Click on --  Get docker
+choose Linux-ubuntu
+
+to check the version of ubuntu on your console -----    cat /etc/*release*
+
+install using convinience script
+its an easier way to install the docker
+than installing through repositories
+
+after installation check the version of docker
+sudo docker version
+
+
+------ Docker Commands ------
+
+1. Run- Starts a container
+"docker run" command is used to run a container from an image
+ex-    docker run ngnix
+It will run ann instance of ngnix application from the docker host if it already exits,
+if it dosen't exits on host then it will pull it from the docker hub.
+But it pulls it only for the first time, for the subsequent executions it will reuse  the same image.
+
+2. ps- lists containers
+The "docker ps" command lists all the running containers and some basic info about them.
+Each container get a random container id and name for it.
+"docker ps -a" list all the running and previously stopped or exited containers
+
+3. STOP - stops a container
+"docker stop conatainer_name"       provide either container id or container name.
+
+4. Rm - Remove a container
+"docker rm conatainer_name" to remove a stopped or exited container.
+
+5. images - lists images
+"docker images" It lists the available images on our host
+
+6. rmi - remove images
+"docker rmi image_name" we can use image id too.
+
+7. pull - pulls an image
+"docker pull image_name" it simply pulls or downloads the imamge on our host and doesnt run it.
+"docker run ubuntu" it runs an instance of ubuntu image and exits immediately.
+Containers are meant to run a specific task or process such as to host an instanvce of a web server or appplication server or database,
+once a task is complete, a container exits.
+Container only lives as long as the process inside it is alive.
+If the web service inside the container is stopped or crashed then the container exits.
+
+8. Run - d
+docker run container_name (for running the container in foreground)
+docker run -d container_name (for running the container in background or deamon mode)
+
+kodecloud.com/p/docker-labs
+
+9. Run -tag
+docker run mysql (it will run the latest image by default)
+docker run mysql:5.2 (you can specify which version you want)
+
+10. PORT mapping
+If i want users to access my application through port 80 on my docker host,
+i could map port 80 of localhost to port 5000 on docker container using -p parameter.
+docker run -p 80:5000 kodecloud/simplewebapp
+So that, all traffic on port 80 of localhost will get routed to 5000 inside the docker container.
+This way we can map multiple instances of our application and map them on different ports.
+Ex :- running an instance of mysql thats run a database on my host and listens on mysql default port 3306.
+ and another instances of mysql on another port .
+ docker run -p 3306:3306 mysql
+ docker run -p 3307:3306 mysql
+ docker run -p 3308:3306 mysql
+ (Note : you cannot map to the same port on the dockerhost more than once )
+
+11. Run - Volume mapping
+Inside mysql container, when we create databases it stores it into /var/lib/mysql.
+The docker container has its own isolated file system and any changes to any file happens within the container.
+Assume we have a lot of data in our database inside the container. what if we have to delete the container in some case. our data get lost.
+If you would like to persists data, you would want to map a directory outside the
+container on docker host to a directory inside a container.
+In this case we created a directory named /opt/datadir and map that to var/lib/mysql inside the docker container using -v option.
+ docker run -v /opt/datadir:var/lib/mysql mysql
+ (docker run -v machine_dir:docker_dir container_name)
+When the docker container runs, it will implicitly mounts external directory to a folder inside a docker container.
+This way, all your data will now be stored in the external volume at /opt/datadir
+and thus the data will remain even if you delete the docker container.
+
+12. Inspect container
+If you would like to see additional details about a specifiic container
+docker inspect container_name
+
+13. Container Logs
+docker logs container_name
+To see the logs of a container we ran in the background
+
+
+
+--------------Docker Networking----------------
+
+When you install docker, it creates 3 networks (Bridge, none, host) automatically.
+Bridge is a default network a container gets attached to.
+If you would like to associate the container with any other network, specify using the --network parameter like below :
+To associate with None network :-  docker run ubuntu --network=none
+To associate with host network :-  docker run ubuntu --network=host
+
+Bridge network is a private internal network created by docker on the host.
+All container attached to this network by Default and the get and internal ip address usuall in the range 172.17 series.
+The containers can access each other using this internal ip if required.
+To access any of these containers from outside, map the ports of these containers to ports on the docker hosts.
+
+Another way to access the containers externally is to associate the container to the host network.
+This takes out any network isolation between the docker host and the docker container.
+Meaning if you want to run a web server on port 5000 in a web-app container, it is automatically accessible
+on the same port externally without requiring any port mapping as the web container uses the hosts network
+Unlike before, you will not be able to run multiple web containers on the same host
+and the same port as the port are common to all containers in the host network.
+
+In none network the containers are not attached to any network and doesn't have
+any access to the external network or other containers.
+They run in an isolated network.
+
+If we want to isolate the containers within the docker host,
+for ex. the first two web containers are on internal network 172 and the second two containers are on different internal network like 182.
+By default docker only creates one internal bridge network but we could create our own internal network using command
+
+docker network create \
+--driver bridge \
+--subnet 182.18.0.0/16
+custom-isolated-network
+
+run "docker network ls" command to list all networks.
+
+INSPECT NETWORK
+To see the network settings and the ip address assigned to an existing container.
+run "docker inspect container_name"
+You will be able to see the network settings:  type of network, ip address, ,mac address,etc.
+
+
+---------Docker Storage--------
+
+The storage location of Docker files :
+For Ubuntu: /var/lib/docker/
+If you are unable to find this ... run "docker info"
+Look for .......   Docker Root Dir: /var/snap/docker/common/var-lib-docker
+run cd /var/snap/docker/common/var-lib-docker
+run ls -ltr
+Now you can see all the files such as images, containers, volume, etc.
+
+------VOLUMES
+
+we are working with the database and we would like to preserve the data created by the container,
+we could add the persistent volume to the container.
+To do this :-
+run "docker volume create data_volume"
+it will create a folder named data_volume inside the var/lib/docker/volumes
+
+we can map this volume to our mysql default location of data storage when running the container
+"docker run -v data_volume:/var/lib/mysql mysql"    where mysql is the image name.
+This will create a new container and mount the data_volume we created to /var/lib/mysql folder inside the container.
+So, all the data returned by database is infact stored on the volume created on the docker host.
+even if the container is destroyed, the data will still active.
+This is called volume mounting.
+
+What if we have our data at another location. For example, lets say we have some external storage /data/mysql on docker host
+and we would like to save that database data on that volume and not in the var/lib/docker/volumes
+run "docker run -v /data/mysql:/var/lib/mysql mysql"
+It will craete a container and mount the folder /data/mysql to the container.
+This is called bind mounting.
+
+So there are two types of mounts
+1. Volume mount : mounts a volume from the volumes directory
+2. Bind mount : bind a directory from any location on the docker host
+
+There is a new way to mounting
+docker run \
+--mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+
+where source is the location on my host and target is the loction on my container.
+
+
+-----------Docker Compose----------
+
+If we needed to setup complex applictaion running multiple services, a better way to do is to use docker compose.
+With docker compose we could create a configuration file in .yml format called docker-compose.yml and put together
+the different services and the options specific to running them in this file.
+Then run "docker-compose up" command to bring up the entire application stack. Where docker-compose is the file name.
+This is easier to implement, run and maintain as all changes are always stored in the docker compose configuration file.
+However this is applicable to only running container on a singel docker host
+
+172.23.0.2
