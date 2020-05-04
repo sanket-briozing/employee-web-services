@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    ports:
+    - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD : password
+      MYSQL_DATABASE: briozing
+      MYSQL_ROOT_HOST: '%'
+  employees:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: empoloyees:v3
+    environment:
+      DB_HOST: mysql
+    ports:
+      - 8888:8888
+    depends_on:
+      - mysql
+    links:
+      - mysql
+      - "mysql:mysql"
+    expose:
+      - 8888
