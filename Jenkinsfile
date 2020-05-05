@@ -20,14 +20,14 @@ pipeline {
 
       stage('Compile') {
          steps {
-           sh 'mvn clean compile'
+           sh 'mvn clean package'
             echo 'Compilation done'
 
          }
       }
      stage('Build') {
          steps {
-            sh './service.sh'
+            sh 'sudo docker-compose up'
             echo 'Build Done'
 
          }
