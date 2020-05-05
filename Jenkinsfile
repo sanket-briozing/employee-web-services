@@ -47,7 +47,11 @@ pipeline {
 
       stage('Compile Test') {
          steps {
-            sh 'mvn clean compile'
+         def mvn_version = 'M3'
+         withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
+           sh "mvn clean package"
+         }
+//             sh 'mvn clean compile'
             echo 'Compilation of Test is done'
 
          }
