@@ -44,8 +44,8 @@ pipeline {
 //          script{
 //             sh 'docker-compose up'
 //             }
-            sh 'sudo service docker stop'
-            sh 'sudo nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
+            sh 'service docker stop'
+            sh 'nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
             sh 'docker stop emp-service'
             sh 'docker rm emp-service'
             sh 'docker build -f DockerFile -t emp-service .'
