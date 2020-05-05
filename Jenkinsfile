@@ -44,10 +44,10 @@ pipeline {
 //          script{
 //             sh 'docker-compose up'
 //             }
-            sh 'service docker stop'
-            sh 'nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
-            sh 'docker stop emp-service'
-            sh 'docker rm emp-service'
+//             sh 'service docker stop'
+//             sh 'nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
+//             sh 'docker stop emp-service'
+//             sh 'docker rm emp-service'
             sh 'docker build -f DockerFile -t emp-service .'
             sh 'docker run --name emp-service -it -d -p 8888:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
             echo 'Build Done'
