@@ -3,20 +3,35 @@ services:
   mysql:
     image: mysql
     environment:
+#      MYSQL_ROOT_PASSWORD: password
+#      MYSQL_DATABASE: briozing
+#      MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD : sanket@123
     ports:
       - 3306:3306
+#    volumes:
+#      - ./data/mysqlByLink:/var/lib/mysql
     volumes:
       - ./data/mysql:/var/lib/mysql
     network_mode: "host"
   docker-employee:
-    image: docker-employee
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: docker-employee:v1
+#    environment:
+#        DB_HOST: mysql
+#    image: docker-employee
     ports:
       - 8888:8888
     network_mode: "host"
     depends_on:
       - mysql
-
+#    links:
+#      - mysql
+#      - "mysql:mysql"
+#    expose:
+#      - 8888
 
 
 
