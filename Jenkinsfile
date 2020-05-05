@@ -1,6 +1,10 @@
 pipeline {
    agent any
 
+   tools {
+       maven 'M3'
+     }
+
    stages {
       stage('Employee Pipeline') {
          steps {
@@ -47,13 +51,11 @@ pipeline {
 
       stage('Compile Test') {
         steps {
-           def mvn_version = 'M3'
-            withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
-                sh "mvn clean package"
-                echo 'Compilation of Test is done'
-            }
+             sh "mvn clean package"
+             echo 'Compilation of Test is done'
          }
       }
+
      stage('Test') {
          steps {
             sh 'mvn clean test -Dgroups=addEmployee'
