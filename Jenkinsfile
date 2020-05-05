@@ -27,7 +27,7 @@ pipeline {
       }
      stage('Build') {
          steps {
-            sh 'mvn clean build'
+            sh 'mvn clean package'
             sh './service.sh'
             echo 'Build Done'
 
