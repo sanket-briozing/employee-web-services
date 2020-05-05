@@ -41,7 +41,9 @@ pipeline {
       }
      stage('Build') {
          steps {
+         script{
             sh 'docker-compose up'
+            }
 //             sh 'sudo service docker stop'
 //             sh 'sudo nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
 //             sh 'docker stop emp-service'
