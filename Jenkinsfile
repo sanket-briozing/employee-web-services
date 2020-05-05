@@ -3,6 +3,7 @@ pipeline {
 
    tools {
        maven 'M3'
+       docker 'Docker'
      }
 
    stages {
@@ -35,7 +36,7 @@ pipeline {
             sh 'docker stop emp-service'
             sh 'docker rm emp-service'
             sh 'docker build -f DockerFile -t emp-service .'
-            sh 'docker run --name emp-service -it -d -p 8085:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
+            sh 'docker run --name emp-service -it -d -p 8888:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
             echo 'Build Done'
          }
       }
