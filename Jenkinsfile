@@ -3,10 +3,15 @@ pipeline {
 
    tools {
        maven 'M3'
-       docker 'Docker'
      }
 
    stages {
+
+      stage('Initialize'){
+          def dockerHome = tool 'myDocker'
+          env.PATH = "${dockerHome}/bin:${env.PATH}"
+      }
+
       stage('Employee Pipeline') {
          steps {
             echo 'Employee Pipeline started'
