@@ -31,9 +31,12 @@ pipeline {
       }
      stage('Build') {
          steps {
-            sh 'docker-compose up'
+            //sh 'docker-compose up'
+            sh 'docker stop emp-service'
+            sh 'docker rm emp-service'
+            sh 'docker build -f DockerFile -t emp-service .'
+            sh 'docker run --name emp-service -it -d -p 8085:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
             echo 'Build Done'
-
          }
       }
 
