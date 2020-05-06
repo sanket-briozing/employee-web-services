@@ -59,28 +59,28 @@ pipeline {
 
 
 
-//      stage('Checkout Test') {
-//           steps {
-//
-//               git branch:'master', credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/sanket-briozing/restful-booker-tests.git'
-//
-//         echo 'Checkout Test Done'
-//         }
-//       }
-//
-//       stage('Compile Test') {
-//         steps {
-//              sh "mvn clean package"
-//              echo 'Compilation of Test is done'
-//          }
-//       }
-//
-//      stage('Test') {
-//          steps {
-//             sh 'mvn clean test -Dgroups=addEmployee'
-//             echo 'Test case passed successfully'
-//
-//          }
-//       }
+     stage('Checkout Test') {
+          steps {
+
+              git branch:'master', credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/sanket-briozing/restful-booker-tests.git'
+
+        echo 'Checkout Test Done'
+        }
+      }
+
+      stage('Compile Test') {
+        steps {
+             sh "mvn clean package"
+             echo 'Compilation of Test is done'
+         }
+      }
+
+     stage('Test') {
+         steps {
+            sh 'mvn clean test -Dgroups=addEmployee'
+            echo 'Test case passed successfully'
+
+         }
+      }
    }
 }
