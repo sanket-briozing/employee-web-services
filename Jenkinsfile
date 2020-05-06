@@ -50,7 +50,7 @@ pipeline {
 //             sh 'docker rm emp-service'
             echo 'Current Working Directory'
             sh 'pwd'
-            sh 'docker build -f ./DockerFile -t emp-service .'
+            sh 'docker build -t emp-service .'
             sh 'docker run --name emp-service -it -d -p 8888:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
             echo 'Build Done'
          }
