@@ -6,12 +6,11 @@ pipeline {
      }
 
    stages {
-
       stage('Initialize'){
-        steps {
+         steps {
             script {
-                 def dockerHome = tool 'myDocker'
-                 env.PATH = "${dockerHome}/bin:${env.PATH}"
+               def dockerHome = tool 'myDocker'
+               env.PATH = "${dockerHome}/bin:${env.PATH}"
             }
          }
       }
@@ -23,64 +22,50 @@ pipeline {
       }
 
       stage('Checkout') {
-          steps {
-
+         steps {
             git branch:'master', credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/sanket-briozing/employee-web-services.git'
-
-
-        echo 'Checkout Done'
-        }
+            echo 'Checkout Done'
+         }
       }
 
       stage('Compile') {
          steps {
            sh 'mvn clean package'
-            echo 'Compilation done'
-
+           echo 'Compilation done'
          }
       }
+
      stage('Build') {
-         steps {
-//          script{
-//             sh 'docker-compose up'
-//             }
-//             sh 'service docker stop'
-//             sh 'nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
-            sh 'docker stop emp-service'
-            sh 'docker rm emp-service'
-            echo 'Current Working Directory'
-            sh 'pwd'
-            sh 'docker build -t emp-service .'
-            sh 'docker run --name emp-service -it -d -p 8888:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
-            echo 'Build Done'
-         }
-      }
-
-
-
+        steps {
+           sh 'docker stop emp-service'
+           sh 'docker rm emp-service'
+           echo 'Current Working Directory'
+           sh 'pwd'
+           sh 'docker build -t emp-service .'
+           sh 'docker run --name emp-service -it -d -p 8888:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
+           echo 'Build Done'
+        }
+     }
 
      stage('Checkout Test') {
-          steps {
+        steps {
+           git branch:'master', credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/sanket-briozing/restful-booker-tests.git'
+           echo 'Checkout Test Done'
+         }
+     }
 
-              git branch:'master', credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/sanket-briozing/restful-booker-tests.git'
-
-        echo 'Checkout Test Done'
+     stage('Compile Test') {
+        steps {
+           sh 'mvn clean package'
+           echo 'Compilation of Test is done'
         }
       }
 
-      stage('Compile Test') {
-        steps {
-             sh "mvn clean package"
-             echo 'Compilation of Test is done'
-         }
-      }
-
      stage('Test') {
-         steps {
-            sh 'mvn clean test -Dgroups=addEmployee'
-            echo 'Test case passed successfully'
-
-         }
-      }
+        steps {
+           sh 'mvn clean test -Dgroups=addEmployee'
+           echo 'Test case passed successfully'
+        }
+     }
    }
 }
