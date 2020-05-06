@@ -56,7 +56,7 @@ pipeline {
 
      stage('Compile Test') {
         steps {
-           sh 'mvn clean package'
+           sh 'mvn clean compile'
            echo 'Compilation of Test is done'
         }
       }
