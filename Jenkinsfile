@@ -46,8 +46,8 @@ pipeline {
 //             }
 //             sh 'service docker stop'
 //             sh 'nohup docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock &'
-//             sh 'docker stop emp-service'
-//             sh 'docker rm emp-service'
+            sh 'docker stop emp-service'
+            sh 'docker rm emp-service'
             echo 'Current Working Directory'
             sh 'pwd'
             sh 'docker build -t emp-service .'
