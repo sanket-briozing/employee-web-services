@@ -42,7 +42,7 @@ pipeline {
            echo 'Current Working Directory'
            sh 'pwd'
            sh 'docker build -t emp-service .'
-           sh 'docker run --name emp-service -it -d -p 8888:8888 -v /var/run/mysqld/mysqld.sock:/tmp/mysql.sock --network=host emp-service'
+           sh 'git config'
            echo 'Build Done'
         }
      }

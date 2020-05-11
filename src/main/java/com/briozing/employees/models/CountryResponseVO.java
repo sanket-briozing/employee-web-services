@@ -3,17 +3,15 @@ package com.briozing.employees.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-@Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
-public class EmployeeRequestVO {
+public class CountryResponseVO {
+
+    private Long id;
 
     private String name;
-
-    private String email;
-
-    private String country;
 }

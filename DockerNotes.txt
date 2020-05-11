@@ -187,3 +187,10 @@ This is easier to implement, run and maintain as all changes are always stored i
 However this is applicable to only running container on a singel docker host
 
 172.23.0.2
+
+jenkins image password: 834b7c1a95934c74bdaaee864f7f1cd6
+
+
+
+
+sudo docker run -u 0 -p 9090:8080 --name=jenkins-master -v /home/sanket/Documents/Workspace/briozing/github/employees/data/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -d jenkins/jenkins
