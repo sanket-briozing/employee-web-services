@@ -1,5 +1,6 @@
 package com.briozing.employees.service;
 
+import com.briozing.employees.models.CountryRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,17 @@ public class RestService {
         try {
             restTemplate.getForObject(url, className);
         }catch(HttpClientErrorException e){
+            status = e.getStatusCode();
+        }
+        return status;
+    }
+
+    public HttpStatus post(String url, CountryRequestVO countryRequestVO, Class className){
+        System.out.println("URL : =>" + url);
+        HttpStatus status = HttpStatus.CREATED;
+        try {
+            restTemplate.postForObject(url, countryRequestVO, className);
+        }catch (HttpClientErrorException e){
             status = e.getStatusCode();
         }
         return status;

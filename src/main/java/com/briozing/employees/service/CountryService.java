@@ -1,5 +1,6 @@
 package com.briozing.employees.service;
 
+import com.briozing.employees.models.CountryRequestVO;
 import com.briozing.employees.models.CountryResponseVO;
 import com.briozing.employees.models.EmployeeRequestVO;
 import com.briozing.employees.models.EmployeeResponseVO;
@@ -26,8 +27,14 @@ public class CountryService {
         return restService.get(url, CountryResponseVO.class);
     }
 
-    public HttpStatus FindById(String countryId) throws Exception{
+    public HttpStatus FindById(String countryId) {
         String url = baseUrl +"findById/"+ countryId;
         return restService.get(url, CountryResponseVO.class);
     }
+
+    public HttpStatus addCountry(CountryRequestVO countryRequestVO){
+        String url = baseUrl +"add";
+        return restService.post(url,countryRequestVO, CountryRequestVO.class);
+    }
+
 }

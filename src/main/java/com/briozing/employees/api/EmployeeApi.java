@@ -1,5 +1,6 @@
 package com.briozing.employees.api;
 
+import com.briozing.employees.models.CountryRequestVO;
 import com.briozing.employees.models.EmployeeRequestVO;
 import com.briozing.employees.models.EmployeeResponseVO;
 import com.briozing.employees.service.CountryService;
@@ -34,7 +35,6 @@ public class EmployeeApi {
             employeeResponseVO = employeeService.addEmployee(employeeRequestVO);
         }
         else {
-//          httpStatus = HttpStatus.BAD_REQUEST;
             employeeResponseVO =new EmployeeResponseVO();
             employeeResponseVO.setName(employeeRequestVO.getName());
             employeeResponseVO.setEmail(employeeRequestVO.getEmail());
@@ -45,7 +45,29 @@ public class EmployeeApi {
         }
         return ResponseEntity.status(httpStatus).body(employeeResponseVO);
     }
-//
+
+    @PostMapping(value = "/addEmployeeWithCountry",consumes= MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmployeeResponseVO> addEmployeeWithCountry(@RequestBody EmployeeRequestVO employeeRequestVO){
+        EmployeeResponseVO employeeResponseVO = null;
+        CountryRequestVO countryRequestVO= new CountryRequestVO();
+        countryRequestVO.setName(employeeRequestVO.getCountry());
+        HttpStatus httpStatus = countryService.addCountry(countryRequestVO);
+
+        if (httpStatus.is2xxSuccessful()) {
+            employeeResponseVO = employeeService.addEmployee(employeeRequestVO);
+        }
+        else {
+            employeeResponseVO =new EmployeeResponseVO();
+            employeeResponseVO.setName(employeeRequestVO.getName());
+            employeeResponseVO.setEmail(employeeRequestVO.getEmail());
+            employeeResponseVO.setCountry(employeeRequestVO.getCountry());
+            List<String> errors= new ArrayList<>();
+            errors.add("Duplicate Country");
+            employeeResponseVO.setErrors(errors);
+        }
+        return ResponseEntity.status(httpStatus).body(employeeResponseVO);
+    }
+
     @GetMapping(value="/getAll",produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EmployeeResponseVO>> getAllEmployees(){
         System.out.println("Hello World");
